@@ -1,4 +1,4 @@
-# OFFICE-CRACKER
+# MICROSOFT OFFICE CRACKER
 
 python office-cracker.py topsecret.docx
 
