@@ -22,25 +22,6 @@ import fileinput
 # AUTHOR  : Terence Broadbent                                                    
 # CONTRACT: GitHub                                                               
 # Version : 2.0                                                                
-# Details : Display my universal banner.
-# Modified: N/A                                                               
-# -------------------------------------------------------------------------------------
-
-os.system("clear")
-
-print "  ___  _____ _____ ___ ____ _____       ____ ____      _    ____ _  _______ ____   "
-print " / _ \|  ___|  ___|_ _/ ___| ____|     / ___|  _ \    / \  / ___| |/ / ____|  _ \  "
-print "| | | | |_  | |_   | | |   |  _| _____| |   | |_) |  / _ \| |   | ' /|  _| | |_) | "
-print "| |_| |  _| |  _|  | | |___| |__|_____| |___|  _ <  / ___ \ |___| . \| |___|  _ <  "
-print " \___/|_|   |_|   |___\____|_____|     \____|_| \_\/_/   \_\____|_|\_\_____|_| \_\ "
-print "                                                                                   "
-print "             BY TERENCE BROADBENT BSC CYBER SECURITY (FIRST CLASS)                 "
-print "                                                                                   "
-
-# -------------------------------------------------------------------------------------
-# AUTHOR  : Terence Broadbent                                                    
-# CONTRACT: GitHub                                                               
-# Version : 2.0                                                                
 # Details : Conduct simple and routine tests on supplied arguements.   
 # Modified: N/A                                                               
 # -------------------------------------------------------------------------------------
@@ -78,6 +59,26 @@ if filextends not in officelist:
 # AUTHOR  : Terence Broadbent                                                    
 # CONTRACT: GitHub                                                               
 # Version : 2.0                                                                
+# Details : Create function to display my universal banner.
+# Modified: N/A                                                               
+# -------------------------------------------------------------------------------------
+
+def display(filename):
+   os.system("clear")
+   print "  ___  _____ _____ ___ ____ _____       ____ ____      _    ____ _  _______ ____   "
+   print " / _ \|  ___|  ___|_ _/ ___| ____|     / ___|  _ \    / \  / ___| |/ / ____|  _ \  "
+   print "| | | | |_  | |_   | | |   |  _| _____| |   | |_) |  / _ \| |   | ' /|  _| | |_) | "
+   print "| |_| |  _| |  _|  | | |___| |__|_____| |___|  _ <  / ___ \ |___| . \| |___|  _ <  "
+   print " \___/|_|   |_|   |___\____|_____|     \____|_| \_\/_/   \_\____|_|\_\_____|_| \_\ "
+   print "                                                                                   "
+   print "             BY TERENCE BROADBENT BSC CYBER SECURITY (FIRST CLASS)                 "
+   print "                                                                                   "
+   print "FILENAME: " + filename + ".\n"
+
+# -------------------------------------------------------------------------------------
+# AUTHOR  : Terence Broadbent                                                    
+# CONTRACT: GitHub                                                               
+# Version : 2.0                                                                
 # Details : Check all required dependencies are installed on the system.
 # Modified: N/A                                                               
 # -------------------------------------------------------------------------------------
@@ -85,18 +86,17 @@ if filextends not in officelist:
 checklist = ["rockyou", "office2john", "hashcat"]
 installed = True
 
+display(filename)
 for check in checklist:
-    cmd = "locate " + check + " > /dev/null"
+    cmd = "locate -i " + check + " > /dev/null"
     checked = os.system(cmd)
     if checked != 0:
-        print check + " is missing..."
+        print "I could not find " + check + "..."
         installed = False
 
-if installed == True:
-    print "All required dependencies are pre-installed...\n"
-else:
-    print "Install missing dependencies before you begin..."
-    exit (True)
+if installed == False:
+   print "\nInstall missing dependencies before you begin...\n"
+   exit (True)
 
 # -------------------------------------------------------------------------------------
 # AUTHOR  : Terence Broadbent                                                    
@@ -112,12 +112,12 @@ menu['2']="Hash Attack."
 menu['3']="Exit"
 
 while True: 
+    display(filename)
     options=menu.keys()
     options.sort()
     for entry in options: 
         print entry, menu[entry]
-    selection=raw_input("\nPlease Select: ")
-    print ""
+    selection=raw_input("Please Select: ")
 
 # ------------------------------------------------------------------------------------- 
 # AUTHOR  : Terence Broadbent                                                    
@@ -128,15 +128,15 @@ while True:
 # -------------------------------------------------------------------------------------
 
     if selection =='1':
-        print "Crack Selected    : Dictionary attack..."
+        print "\nCrack Selected    : Dictionary attack..."
         dictionary = "/usr/share/wordlists/rockyou.txt"
         if os.path.isfile(dictionary):
             print "Using Dictionary  : " + dictionary + "..."
         else:
             print "System Error      : Dictionary not found..."
             exit(True)
-        os.system("office2john.py " + filename + " > Hash.txt")
-        os.system("john --encoding=UTF-8 --wordlist=" + dictionary + " Hash.txt > Temp.txt")
+        os.system("office2john.py '" + filename + "' > Hash.txt")
+        os.system("john --encoding=UTF-8 --wordlist=" + dictionary + " Hash.txt > Temp.txt 2>&1")
         os.system("john --show Hash.txt > Answer.txt")
 	os.system("sed '$d' Answer.txt > Password.txt")
 	with open('Password.txt', 'r') as myfile:
@@ -144,7 +144,7 @@ while True:
         if password == "Could not find password":
             print "Crack Status      : Dictionary exhausted..."
         else:      
-            print "File Password     : " + password
+            print "File Password     : '" + password.rstrip() + "'\n"
         os.remove('Hash.txt')
         os.remove('Answer.txt')
         os.remove('Password.txt')
@@ -160,8 +160,8 @@ while True:
 # -------------------------------------------------------------------------------------
 
     elif selection == '2':
-        print "Crack Selected    : Hash attack..."
-        os.system("office2john.py " + filename + " > Hash.txt")
+        print "\nCrack Selected    : Hash attack..."
+        os.system("office2john.py '" + filename + "' > Hash.txt")
 	with open('Hash.txt', 'r') as myfile:
             hashdata = myfile.read().replace(filename + ":", '')
 	for line in fileinput.input('Hash.txt', inplace=1):
@@ -184,7 +184,7 @@ while True:
             os.remove("Hash.txt")
             exit (True)
         print "Using Hashcat Mode: " + level
-        os.system("hashcat -m " + level + " -a 3 Hash.txt -i ?d?d?d?d?d?d --force > Temp.txt")
+        os.system("hashcat -m " + level + " -a 3 Hash.txt -i ?d?d?d?d?d?d --force > Temp.txt 2>&1")
         os.system("hashcat --show -m " + level + " Hash.txt --force > Answer.txt")
         os.system("awk -F: '{ print $2 }' Answer.txt > Password.txt")
         with open('Password.txt', 'r') as myfile:
@@ -192,7 +192,7 @@ while True:
         if password == "":
             print "Crack Status      : Algorithm exhausted...\n"
         else:
-            print "Found Password    : " + password + "..."
+            print "Found Password    : '" + password + "'\n"
         os.remove('Hash.txt')
         os.remove('Answer.txt')
         os.remove('Password.txt')
