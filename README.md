@@ -3,11 +3,11 @@
 
 Usage: python3 office-cracker.py topsecret.docx
 
-| LANGUAGE | FILENAME          | MD5 HASH                         |
-|--------  |---------          |---------                         |
-| python3  | office-cracker.py | 84459ebe7ff85c3c667069e80ccce350 |
-| doc      | topsecret.doc     | deabfc23261259cec48f226ef154df51 |
-| xlsx     | topsecret.xlsx    | 8c977a4286601341728f121fc9a02752 |
+| LANGUAGE | FILENAME          | MD5 HASH                         | VERSION |
+|--------  |---------          |---------                         |-----    |
+| python3  | office-cracker.py | 84459ebe7ff85c3c667069e80ccce350 | 3.0     |
+| doc      | topsecret.doc     | deabfc23261259cec48f226ef154df51 |         |
+| xlsx     | topsecret.xlsx    | 8c977a4286601341728f121fc9a02752 |         |
 
 A python script file to crack encrypted Microsoft Office files using bruteforce. The script is menu driven and allows the user to choose between a dictionary attack or a hash attack on the specified file.
 
